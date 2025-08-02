@@ -28,7 +28,7 @@ export default function LSUDashboard() {
 
   /* ------------------------------ render ----------------------------- */
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-50 flex flex-col items-center p-4 w-full">
+    <div className="h-full bg-gray-950 text-gray-50 flex flex-col items-center p-4 w-full">
       <div className="w-full rounded-lg border bg-card text-card-foreground shadow-2xl">
         <ConnectionSubheader status={status} connect={connect} disconnect={disconnect} />
         <CardContent className="space-y-4">
