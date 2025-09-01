@@ -1,14 +1,15 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
 import {MqttMessage} from '../../domain';
+import {DeviceService} from '../../services';
 
 import {TabButton, MqttStatusDisplay} from './ui';
-import {selectDevicesFromMessages} from './services';
 import useMQTT from './hooks/useMQTT';
 import DashboardView from './views/DashboardView';
 import MapView from './views/MapView';
 
-import { MOCK_DEVICES } from '../../services/__mocks__/devices';
+
+const deviceService = new DeviceService();
 
 /**
  * ViewsWrapper – top-level tabbed view that hosts the Dashboard and the Map.
@@ -27,7 +28,7 @@ const MainPage = () => {
   const {status, connect, disconnect} = useMQTT({onMessage});
 
   // Map devices derived from messages
-  const devices = useMemo(() => selectDevicesFromMessages(messages), [messages]);
+  const devices = deviceService.getAllDevices();
 
   return (
     <div className="flex h-[85dvh] w-full flex-col bg-neutral-950 text-white">
@@ -55,7 +56,7 @@ const MainPage = () => {
         {activeTab === "dashboard" ? (
           <DashboardView messages={messages} status={status} />
         ) : (
-          <MapView devices={MOCK_DEVICES}/>
+          <MapView devices={devices}/>
         )}
       </div>
     </div>

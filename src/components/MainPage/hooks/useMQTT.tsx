@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import mqtt, {MqttClient} from 'mqtt';
 
-import {MQTT_HOSTNAME, MQTT_PORT, MQTT_TOPIC} from '../../LSUDashboard/constants';
+import {MQTT_CONFIG} from '../../../infrastructure';
 import {MqttMessage, MqttStatus} from '../../../domain';
 
 interface UseMQTTProps {
@@ -15,7 +15,7 @@ const useMQTT = ({onMessage}: UseMQTTProps) => {
     if (clientRef.current && clientRef.current.connected) return;
 
     setStatus(MqttStatus.CONNECTING);
-    const url = `ws://${MQTT_HOSTNAME}:${MQTT_PORT}`;
+    const url = MQTT_CONFIG.wsUrl;
 
     const cli = mqtt.connect(url, {
       clientId: `dashboard-${crypto.randomUUID().slice(0, 8)}`,
@@ -24,7 +24,7 @@ const useMQTT = ({onMessage}: UseMQTTProps) => {
 
     cli.on("connect", () => {
       setStatus(MqttStatus.ONLINE);
-      cli.subscribe(MQTT_TOPIC);
+      cli.subscribe(MQTT_CONFIG.topic);
     });
 
     cli.on("message", (topic, payload) => 
