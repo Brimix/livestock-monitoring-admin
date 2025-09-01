@@ -1,4 +1,4 @@
-import {MqttMessage} from './types';
+import {MqttMessage} from '../../domain';
 
 interface LSUMessageProps {
   message: MqttMessage;
@@ -6,7 +6,7 @@ interface LSUMessageProps {
 const LSUMessage = ({message}: LSUMessageProps) => {
   const {topic, payload, ts} = message;
 
-  const parsePayload = (payload: string) => {
+  const parseData = (payload: string) => {
     try {
       const [lat, lon, animalTemp, ambientTemp, heartRate] = payload.split('-').map(Number);
       
@@ -21,6 +21,13 @@ const LSUMessage = ({message}: LSUMessageProps) => {
     } catch (err) {
       return `Invalid payload format: ${payload}`;
     }
+  }
+
+  const parsePayload = (payload: string) => {
+    if (/^[0-9]/.test(payload)) return parseData(payload);
+    return (
+      <> {payload} </>
+    );
   }
 
   return (

@@ -24,4 +24,4 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
   );
 };
 
-export default PageTitle; 
+export default PageTitle;

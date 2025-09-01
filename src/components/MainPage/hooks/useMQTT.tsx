@@ -1,20 +1,20 @@
 import {useEffect, useRef, useState} from 'react';
 import mqtt, {MqttClient} from 'mqtt';
 
-import {MQTT_HOSTNAME, MQTT_PORT, MQTT_TOPIC} from './constants';
-import {MqttMessage, Status} from './types';
+import {MQTT_HOSTNAME, MQTT_PORT, MQTT_TOPIC} from '../../LSUDashboard/constants';
+import {MqttMessage, MqttStatus} from '../../../domain';
 
 interface UseMQTTProps {
   onMessage: (message: MqttMessage) => void;
 }
 const useMQTT = ({onMessage}: UseMQTTProps) => {
-  const [status, setStatus] = useState(Status.OFFLINE);
+  const [status, setStatus] = useState(MqttStatus.OFFLINE);
   const clientRef = useRef<MqttClient | null>(null);
 
   const connect = () => {
     if (clientRef.current && clientRef.current.connected) return;
 
-    setStatus(Status.CONNECTING);
+    setStatus(MqttStatus.CONNECTING);
     const url = `ws://${MQTT_HOSTNAME}:${MQTT_PORT}`;
 
     const cli = mqtt.connect(url, {
@@ -23,7 +23,7 @@ const useMQTT = ({onMessage}: UseMQTTProps) => {
     });
 
     cli.on("connect", () => {
-      setStatus(Status.ONLINE);
+      setStatus(MqttStatus.ONLINE);
       cli.subscribe(MQTT_TOPIC);
     });
 
@@ -31,15 +31,15 @@ const useMQTT = ({onMessage}: UseMQTTProps) => {
       onMessage({topic, payload: payload.toString(), ts: Date.now()})
     );
 
-    cli.on("close", () => setStatus(Status.OFFLINE));
-    cli.on("error", () => setStatus(Status.OFFLINE));
+    cli.on("close", () => setStatus(MqttStatus.OFFLINE));
+    cli.on("error", () => setStatus(MqttStatus.OFFLINE));
 
     clientRef.current = cli;
   };
 
   const disconnect = () => {
     clientRef.current?.end(true);
-    setStatus(Status.OFFLINE);
+    setStatus(MqttStatus.OFFLINE);
   };
 
   useEffect(
