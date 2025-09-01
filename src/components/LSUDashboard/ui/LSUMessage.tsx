@@ -1,4 +1,4 @@
-import {MqttMessage} from '../../domain';
+import {MqttMessage} from '../../../domain';
 
 interface LSUMessageProps {
   message: MqttMessage;

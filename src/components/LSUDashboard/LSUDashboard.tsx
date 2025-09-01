@@ -1,8 +1,7 @@
 import {MqttMessage, MqttStatus} from '../../domain';
 import externalQR from '../../assets/external.png';
 
-import {ConnectionSubheader, QRCodeBlock, CardContent} from './ui';
-import LSUMessage from './LSUMessage';
+import {ConnectionSubheader, QRCodeBlock, CardContent, LSUMessage} from './ui';
 
 interface LSUDashboardProps {
   messages: MqttMessage[];
