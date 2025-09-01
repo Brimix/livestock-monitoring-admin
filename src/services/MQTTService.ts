@@ -1,6 +1,6 @@
 import { MqttMessage, MqttStatus } from '../domain';
 
-export interface MQTTService {
+interface MQTTServiceI {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   subscribe(topic: string): Promise<void>;
@@ -11,7 +11,7 @@ export interface MQTTService {
   onStatusChange(callback: (status: MqttStatus) => void): void;
 }
 
-export class MQTTServiceImpl implements MQTTService {
+class MQTTService implements MQTTServiceI {
   private status: MqttStatus = MqttStatus.OFFLINE;
   private messageCallbacks: ((message: MqttMessage) => void)[] = [];
   private statusCallbacks: ((status: MqttStatus) => void)[] = [];
@@ -55,3 +55,5 @@ export class MQTTServiceImpl implements MQTTService {
     this.statusCallbacks.forEach(callback => callback(status));
   }
 }
+
+export default MQTTService;

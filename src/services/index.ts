@@ -1,3 +1,3 @@
 // Services - Business logic and data processing
-export * from './DeviceService';
-export * from './MQTTService';
+export {default as DeviceService} from './DeviceService';
+export {default as MQTTService} from './MQTTService';
