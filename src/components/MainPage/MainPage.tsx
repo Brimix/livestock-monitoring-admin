@@ -8,6 +8,10 @@ import useMQTT from './hooks/useMQTT';
 import DashboardView from './views/DashboardView';
 import MapView from './views/MapView';
 
+enum TabType {
+  DASHBOARD = "dashboard",
+  MAP = "map"
+}
 
 const deviceService = new DeviceService();
 
@@ -18,7 +22,7 @@ const deviceService = new DeviceService();
  * - Passes {messages, status, connect, disconnect} to Dashboard
  */
 const MainPage = () => {
-  const [activeTab, setActiveTab] = useState<"dashboard" | "map">("map");
+  const [activeTab, setActiveTab] = useState<TabType>(TabType.DASHBOARD);
 
   const [messages, setMessages] = useState<MqttMessage[]>([]);
   const onMessage = useCallback((message: MqttMessage) => {
@@ -36,13 +40,13 @@ const MainPage = () => {
       <nav className="sticky top-0 z-20 flex items-center gap-2 border-b border-white/10 bg-black/40 px-3 py-2 backdrop-blur">
         <TabButton
           label="Dashboard"
-          active={activeTab === "dashboard"}
-          onClick={() => setActiveTab("dashboard")}
+          active={activeTab === TabType.DASHBOARD}
+          onClick={() => setActiveTab(TabType.DASHBOARD)}
         />
         <TabButton
           label="Map"
-          active={activeTab === "map"}
-          onClick={() => setActiveTab("map")}
+          active={activeTab === TabType.MAP}
+          onClick={() => setActiveTab(TabType.MAP)}
         />
         <MqttStatusDisplay
           status={status}
@@ -53,7 +57,7 @@ const MainPage = () => {
 
       {/* Content area */}
       <div className="flex-1 min-h-0 overflow-auto p-3">
-        {activeTab === "dashboard" ? (
+        {activeTab === TabType.DASHBOARD ? (
           <DashboardView messages={messages} status={status} />
         ) : (
           <MapView devices={devices}/>
