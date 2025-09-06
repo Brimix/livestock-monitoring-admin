@@ -8,7 +8,7 @@
 export const MQTT_CONFIG = {
   hostname: 'localhost',
   port: '9001',
-  topic: 'livestock/#',
+  topics: ['livestock/#', 'central'],
   // WebSocket URL for MQTT over WebSocket
   wsUrl: 'ws://localhost:9001',
 } as const;

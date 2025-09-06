@@ -15,7 +15,7 @@ const ConnectionSubheader = ({status}: ConnectionSubheaderI) => {
         {status === MqttStatus.ONLINE && (
           <>
             <BadgeCheck className="h-5 w-5 text-green-400" />
-            <span className="font-mono text-sm text-gray-400">Subscribed to {MQTT_CONFIG.topic}</span>
+            <span className="font-mono text-sm text-gray-400">Subscribed to {MQTT_CONFIG.topics.join(', ')}</span>
           </>
         )}
         {status === MqttStatus.CONNECTING && <PlugZap className="h-5 w-5 text-yellow-400 animate-pulse" />}

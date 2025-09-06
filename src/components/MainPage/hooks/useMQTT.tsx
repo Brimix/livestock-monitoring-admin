@@ -24,7 +24,9 @@ const useMQTT = ({onMessage}: UseMQTTProps) => {
 
     cli.on("connect", () => {
       setStatus(MqttStatus.ONLINE);
-      cli.subscribe(MQTT_CONFIG.topic);
+      MQTT_CONFIG.topics.forEach(topic => {
+        cli.subscribe(topic);
+      });
     });
 
     cli.on("message", (topic, payload) => 
