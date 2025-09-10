@@ -1,6 +1,6 @@
 import React from 'react';
-import LSUDashboard from './LSUDashboard';
 import PageTitle from './components/PageTitle';
+import MainPage from './components/MainPage';
 
 const App = () => {
   return (
@@ -10,7 +10,7 @@ const App = () => {
         subtitle="Manage and monitor your livestock operations efficiently"
       />
       <div className="flex-1">
-        <LSUDashboard />
+        <MainPage />
       </div>
     </div>
   );

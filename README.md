@@ -17,13 +17,13 @@ The system connects to an MQTT broker over WebSocket to receive real-time update
 ### Architecture
 - Frontend: React with TypeScript
 - Real-time Communication: MQTT over WebSocket
-- Data Format: Hyphen-separated values (lat-lon-animalTemp-ambientTemp-heartRate)
+- Data Format: Pipe-separated values (lat|lon|animalTemp|ambientTemp|heartRate)
 
 ### Key Components
 - `LSUDashboard`: Main dashboard component
 - `useMQTT`: Custom React hook for MQTT connection management
 - `LSUMessage`: Component for parsing and displaying individual messages
-- Message payload format: `latitude-longitude-animalTemp-ambientTemp-heartRate`
+- Message payload format: `latitude|longitude|animalTemp|ambientTemp|heartRate`
   - Latitude/Longitude are scaled by 1,000,000
   - Temperatures are in Celsius
   - Heart rate in BPM
