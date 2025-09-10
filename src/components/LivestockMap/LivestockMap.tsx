@@ -59,15 +59,19 @@ const LivestockMap = (props: LivestockMapProps) => {
       <MapHeader bounds={MAP_BOUNDS} />
 
       {/* Static map image and overlay */}
-      <img
-        ref={imgRef}
-        src={rosarioMap}
-        alt="Region map"
-        className="pointer-events-none select-none w-full h-auto object-contain"
-        style={{maxHeight: 'inherit'}}
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-      />
+      <div className="relative">
+        <img
+          ref={imgRef}
+          src={rosarioMap}
+          alt="Region map"
+          className="pointer-events-none select-none w-full h-auto object-contain"
+          style={{maxHeight: 'inherit'}}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+        />
+        {/* Transparent white overlay for better pin contrast */}
+        <div className="absolute inset-0 bg-white/25 pointer-events-none" />
+      </div>
       {imageRect && (
         <MapOverlay
           imageRect={imageRect}

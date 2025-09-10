@@ -1,9 +1,9 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 
 import {MqttMessage} from '../../domain';
 import {DeviceService} from '../../services';
 import {DeviceRepository} from '../../infrastructure';
-import {simulateMqttScenarioWithService} from './simulation';
+// import {simulateMqttScenarioWithService} from './simulation'; // Disabled - using actual MQTT data
 
 import {TabButton, MqttStatusDisplay} from './ui';
 import useMQTT from './hooks/useMQTT';
@@ -31,19 +31,30 @@ const MainPage = () => {
   const deviceService = useMemo(() => new DeviceService(deviceRepository), [deviceRepository]);
 
   const [messages, setMessages] = useState<MqttMessage[]>([]);
+  const [lastMessage, setLastMessage] = useState<string | null> (null);
+
+
   const onMessage = useCallback((message: MqttMessage) => {
+    // Create a unique key for deduplication based on topic, payload, and timestamp
+    const messageKey = `${message.topic}|${message.payload}`;
+
+    if (lastMessage === messageKey) {
+      console.debug('Duplicate MQTT message detected and skipped:', message.topic);
+      return;
+    }
+    setLastMessage(messageKey);
     setMessages((prev) => [message, ...prev]);
     
     // Push message to service for device data extraction
     deviceService.handleMqttMessage(message);
   }, [deviceService]);
 
-  // Run MQTT simulation on component mount to populate initial data
-  useEffect(() => {
-    console.log('🚀 Starting MQTT simulation to populate initial device data...');
-    simulateMqttScenarioWithService(deviceService, onMessage);
-    console.log('✅ MQTT simulation complete! Initial data loaded.');
-  }, [deviceService]);
+  // Simulation disabled - using actual MQTT data instead
+  // useEffect(() => {
+  //   console.log('🚀 Starting MQTT simulation to populate initial device data...');
+  //   simulateMqttScenarioWithService(deviceService, onMessage);
+  //   console.log('✅ MQTT simulation complete! Initial data loaded.');
+  // }, [deviceService]);
 
   const {status, connect, disconnect} = useMQTT({onMessage});
 
