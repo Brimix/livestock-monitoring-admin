@@ -15,10 +15,10 @@ const LSUDashboard = (props: LSUDashboardProps) => {
       <div className="flex gap-6 h-full">
         {/* Main Dashboard Content */}
         <div className="flex-1">
-          <div className="w-full rounded-lg border bg-card text-card-foreground shadow-2xl h-full">
+          <div className="w-full rounded-lg border bg-card text-card-foreground shadow-2xl h-full flex flex-col">
             <ConnectionSubheader status={status}/>
-            <CardContent className="space-y-4">
-              <div className="h-96 overflow-y-auto border rounded-lg p-2 bg-black/30 font-mono text-sm">
+            <CardContent className="flex-1 p-4">
+              <div className="h-full overflow-y-auto border rounded-lg p-2 bg-black/30 font-mono text-sm">
                 {messages.length === 0 ? (
                   <p className="text-gray-500">No messages yet…</p>
                 ) : (

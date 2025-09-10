@@ -1,19 +1,21 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 
 import {MqttMessage} from '../../domain';
 import {DeviceService} from '../../services';
+import {DeviceRepository} from '../../infrastructure';
+import {simulateMqttScenarioWithService} from './simulation';
 
 import {TabButton, MqttStatusDisplay} from './ui';
 import useMQTT from './hooks/useMQTT';
 import DashboardView from './views/DashboardView';
 import MapView from './views/MapView';
+import DevicesView from './views/DevicesView';
 
 enum TabType {
   DASHBOARD = "dashboard",
-  MAP = "map"
+  MAP = "map",
+  DEVICES = "devices"
 }
-
-const deviceService = new DeviceService();
 
 /**
  * ViewsWrapper – top-level tabbed view that hosts the Dashboard and the Map.
@@ -23,16 +25,30 @@ const deviceService = new DeviceService();
  */
 const MainPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>(TabType.DASHBOARD);
+  
+  // Initialize device service and repository
+  const deviceRepository = useMemo(() => new DeviceRepository(), []);
+  const deviceService = useMemo(() => new DeviceService(deviceRepository), [deviceRepository]);
 
   const [messages, setMessages] = useState<MqttMessage[]>([]);
   const onMessage = useCallback((message: MqttMessage) => {
     setMessages((prev) => [message, ...prev]);
-  }, []);
+    
+    // Push message to service for device data extraction
+    deviceService.handleMqttMessage(message);
+  }, [deviceService]);
+
+  // Run MQTT simulation on component mount to populate initial data
+  useEffect(() => {
+    console.log('🚀 Starting MQTT simulation to populate initial device data...');
+    simulateMqttScenarioWithService(deviceService, onMessage);
+    console.log('✅ MQTT simulation complete! Initial data loaded.');
+  }, [deviceService]);
 
   const {status, connect, disconnect} = useMQTT({onMessage});
 
   // Map devices derived from messages
-  const devices = deviceService.getAllDevices();
+  const devices = deviceService.getActiveDevices();
 
   return (
     <div className="flex h-[85dvh] w-full flex-col bg-neutral-950 text-white">
@@ -48,6 +64,11 @@ const MainPage = () => {
           active={activeTab === TabType.MAP}
           onClick={() => setActiveTab(TabType.MAP)}
         />
+        <TabButton
+          label="Devices"
+          active={activeTab === TabType.DEVICES}
+          onClick={() => setActiveTab(TabType.DEVICES)}
+        />
         <MqttStatusDisplay
           status={status}
           connect={connect}
@@ -59,8 +80,10 @@ const MainPage = () => {
       <div className="flex-1 min-h-0 overflow-auto p-3">
         {activeTab === TabType.DASHBOARD ? (
           <DashboardView messages={messages} status={status} />
-        ) : (
+        ) : activeTab === TabType.MAP ? (
           <MapView devices={devices}/>
+        ) : (
+          <DevicesView service={deviceService} />
         )}
       </div>
     </div>

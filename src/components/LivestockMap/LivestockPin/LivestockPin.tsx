@@ -62,7 +62,9 @@ const LivestockPin = React.memo(function LivestockPin({
           device.status === "alert" ? "bg-red-500/30" : device.status === "warn" ? "bg-amber-400/30" : "bg-emerald-400/30",
         ].join(" ")}
       />
-      <span className={["relative block h-full w-full rounded-full", color].join(" ")} />
+      <span className={["relative block h-full w-full rounded-full border-2 border-black", color].join(" ")} />
+      <span className="absolute inset-0 rounded-full border border-white -m-0.5" />
+      <span className="absolute inset-0 rounded-full border border-black -m-1" />
     </button>
   );
 });

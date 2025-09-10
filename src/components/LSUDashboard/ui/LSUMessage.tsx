@@ -8,7 +8,7 @@ const LSUMessage = ({message}: LSUMessageProps) => {
 
   const parseData = (payload: string) => {
     try {
-      const [lat, lon, animalTemp, ambientTemp, heartRate] = payload.split('-').map(Number);
+      const [lat, lon, animalTemp, ambientTemp, heartRate] = payload.split('|').map(Number);
       
       return (
         <>
@@ -24,7 +24,9 @@ const LSUMessage = ({message}: LSUMessageProps) => {
   }
 
   const parsePayload = (payload: string) => {
-    if (/^[0-9]/.test(payload)) return parseData(payload);
+    if (topic.includes('/data')) {
+      return parseData(payload);
+    }
     return (
       <> {payload} </>
     );

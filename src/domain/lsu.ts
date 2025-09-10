@@ -11,6 +11,8 @@ export type LsuDeviceData = {
   label?: string;
   heartRateBPM?: number;
   temperatureC?: number;
+  ambientTemperatureC?: number;
   updatedAt?: string | Date;
   status?: LsuDeviceStatus;
+  alertDescription?: string;
 };
